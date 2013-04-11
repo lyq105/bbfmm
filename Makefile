@@ -12,7 +12,7 @@ source   := $(wildcard ./src/*.cpp)
 srcfiles := $(notdir $(source))
 
 # object files
-objects	 := $(patsubst %.cpp, %.o, $(srcfiles))
+objects	 := $(patsubst %.cpp, %.o, $(source))
 
 all: $(target)
 
@@ -27,7 +27,7 @@ $(target): $(objects)
 .cpp.o:
 	$(CPP) $(CFLAGS) -c $< -o $@
 .c.o:
-	$(CC) $(CFLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm *.o 
