@@ -1,4 +1,4 @@
-#include "SparseMtxEx.h"
+#include "sparsemtxex.h"
 #include <assert.h>
 #include <math.h>
 /*-------------------------------------------------------

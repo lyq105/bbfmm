@@ -6,7 +6,7 @@
 
 
 
-#include "AbsMtx.h"
+#include "absmtx.h"
 #include <iostream>
 
 /*-----------------------------------------------------------------

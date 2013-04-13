@@ -21,6 +21,15 @@ public:
 	~Mesh(){};
 	struct Point {
 		Point(){ x[0] = x[1] = x[2] = .0;}
+		Point(const Point& pt){x[0]=pt.x[0];x[1]=pt.x[1];x[2]=pt.x[2];}
+		Point operator=(const Point& pt)
+		{ 
+			Point rpt;
+			rpt.x[0]=pt.x[0];
+			rpt.x[1]=pt.x[1];
+			rpt.x[2]=pt.x[2];
+			return rpt;
+		}
 		int p_tag;
 		double x[3];
 	};

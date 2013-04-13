@@ -2,7 +2,7 @@
 #ifndef _ABSMTX_H_
 #define _ABSMTX_H_
 #include <iostream>
-#include "Vector.h"
+#include "vector.h"
 
 
 /*--------------------------------------------------------------

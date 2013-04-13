@@ -16,11 +16,11 @@
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
 
-#include "AbsMtx.h"
-#include "Vector.h"
-#include "Fullmtx.h"
-#include "SparseMtx.h"
-#include "SparseMtxEx.h"
+#include "absmtx.h"
+#include "vector.h"
+#include "fullmtx.h"
+#include "sparsemtx.h"
+#include "sparsemtxex.h"
 
 
 #endif

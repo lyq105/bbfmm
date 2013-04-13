@@ -4,8 +4,8 @@
 
 
 
-#include "AbsMtx.h"
-#include "FullMtx.h"
+#include "absmtx.h"
+#include "fullmtx.h"
 #include <iostream>
 
 using std::ostream;

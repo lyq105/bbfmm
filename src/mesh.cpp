@@ -240,7 +240,7 @@ bool Mesh::load_mesh(std::string filename)
 		std::cout << "ERROR #1: Can not load the mesh data file \""
 			<< filename << "\"!!"
 			<< std::endl;
-		exit(0);
+		//exit(0);
 	}
 	std::getline(infile,buffer,'\n');
 	if (buffer.length() == 0 || buffer[0] == '#')
@@ -448,7 +448,7 @@ bool Mesh::load_neutral_mesh(std::string filename)
 		std::cout << "ERROR #1: Can not load the mesh data file \""
 			<< filename << "\"!!"
 			<< std::endl;
-		exit(0);
+		//exit(0);
 	}
 
 	mesh_dim = 3;
@@ -504,7 +504,9 @@ bool Mesh::load_neutral_mesh(std::string filename)
 		}
 		buffer_parser.clear();
 		buffer_parser.str(buffer);
-		buffer_parser >> ve.ve_tag ;
+		int ve_tag=0;
+		buffer_parser >> ve_tag ;
+		ve.ve_tag.push_back(ve_tag);
 		for (int ve_id = 0; ve_id < number_of_v_node; ++ ve_id)
 		{
 			int temp;
@@ -536,7 +538,9 @@ bool Mesh::load_neutral_mesh(std::string filename)
 
 		buffer_parser.clear();
 		buffer_parser.str(buffer);
-		buffer_parser >> se.se_tag;
+		int se_tag=0;
+		buffer_parser >> se_tag;
+		se.se_tag.push_back(se_tag);
 		//		std::cout << se.se_tag << "  " << se.se_mat << std::endl;
 		for (int se_id = 0; se_id < number_of_s_node; ++ se_id)
 		{
@@ -585,20 +589,18 @@ bool Mesh::plot_mesh(std::string filename)
 
 	for (int i = 0; i< number_of_point(); i++)
 	{
-		Mesh::Point& p0 = find_point(i);
 		for (int p_id = 0; p_id < mesh_dim; ++ p_id){
 			ofile << std::setw(12) << std::setprecision(8)
-				<< p0.x[p_id];
+				<< find_point(i).x[p_id];
 		}
 		ofile << std::endl;
 	}
 	for (int i = 0; i < number_of_volume_elements(); i++) 
 	{
-		Mesh::Volume_element& ve = find_volume_element(i);
 		for (int ve_id = 0; ve_id < number_of_v_node; ++ ve_id)
 		{
 			ofile << std::setw(12) 
-				<< ve.ve_conectivity[ve_id] + 1; 
+				<< find_volume_element(i).ve_conectivity[ve_id] + 1; 
 		}
 		ofile << std::endl;
 	}
@@ -615,24 +617,24 @@ bool Mesh::plot_mesh(std::string filename)
 
 	for (int i = 0; i< number_of_point(); i++)
 	{
-		Mesh::Point& p0 = find_point(i);
 		for (int p_id = 0; p_id < mesh_dim; ++ p_id){
 			ofile << std::setw(12) << std::setprecision(8)
-				  << p0.x[p_id];
+				  << find_point(i).x[p_id];
 		}
 		ofile << std::endl;
 	}
 	for (int i = 0; i < number_of_surface_elements(); i++) 
 	{
-		Mesh::Surface_element& se = find_surface_element(i);
 		for (int se_id = 0; se_id < number_of_s_node; ++ se_id){
 			ofile << std::setw(12) 
-				<< se.se_conectivity[se_id] + 1; 
+				<< find_surface_element(i).se_conectivity[se_id] + 1; 
 //			std::cout << se.se_conectivity[se_id] + 1 ;
 		}
 // 		std::cout << std::endl;
-		if (mesh_dim == 2)
-			ofile << std::setw(12) << se.se_conectivity[0] + 1;
+		if (mesh_dim == 2){
+			ofile << std::setw(12) 
+				    << find_surface_element(i).se_conectivity[0] + 1;
+		}
 		ofile << std::endl;
 	}
 	ofile.close();
@@ -659,21 +661,19 @@ bool Mesh::save( std::string filename )
 	ofile << this -> number_of_volume_elements() << std::endl;
 	for (int i = 0; i < this->number_of_volume_elements(); i++) 
 	{
-		Mesh::Volume_element& ve = this->find_volume_element(i);
 		for (int ve_id = 0; ve_id < number_of_v_node; ++ ve_id)
 		{
 			ofile << std::setw(12) 
-				<< ve.ve_conectivity[ve_id] + 1; 
+				<< find_volume_element(i).ve_conectivity[ve_id] + 1; 
 		}
 		ofile << std::endl;
 	}
 	ofile << this -> number_of_surface_elements() << std::endl;
 	for (int i = 0; i < this->number_of_surface_elements();i++ )
 	{
-		Mesh::Surface_element& se = find_surface_element(i);
 		for (int se_id = 0; se_id < number_of_s_node; ++ se_id){
 			ofile << std::setw(12) 
-				<< se.se_conectivity[se_id] + 1; 
+				<< find_surface_element(i).se_conectivity[se_id] + 1; 
 			//			std::cout << se.se_conectivity[se_id] + 1 ;
 		}
 		// 		std::cout << std::endl;

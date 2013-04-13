@@ -1,8 +1,8 @@
 #ifndef _SPARSEMTXEX_H_
 #define _SPARSEMTXEX_H_
 
-#include "Vector.h"
-#include "Matrix.h"
+#include "vector.h"
+#include "matrix.h"
 #include <vector>
 using std::vector;
 

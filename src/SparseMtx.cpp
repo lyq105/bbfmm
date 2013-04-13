@@ -1,5 +1,5 @@
 
-#include "SparseMtx.h"
+#include "sparsemtx.h"
 #include <assert.h>
 #include <math.h>
 /*-------------------------------------------------------

@@ -9,8 +9,8 @@
 *2009.9.16 modified
 *
 ***************************************************************/
-#include "Vector.h"
-#include "AbsMtx.h"
+#include "vector.h"
+#include "absmtx.h"
 #include <assert.h>
 #include <cmath>
 #include <iostream>
