@@ -1,1 +1,1 @@
-This folder contains numerical examples by using Black box Fast multipole Method.
+This folder contains numerical examples by using bbfmm.
