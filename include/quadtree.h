@@ -69,9 +69,9 @@ namespace qtree_namespace{
 	/// 计算初始凸包
 	int cal_convex_hall(Mesh& mesh,Point& center,double& length);
 	/// 画已经生成的四叉树
-	int plot_quadtree(Quadtree qtree,char filename[]);
+	int plot_quadtree(Quadtree qtree,const char* filename);
 	/// 打印树结构的信息
-	int print_quadtree_info(Quadtree qtree,char filename[]);
+	int print_quadtree_info(Quadtree qtree,const char* filename);
 
 	/// 生成遍历树结构的动画
 	int animate_it(Quadtree qtree);

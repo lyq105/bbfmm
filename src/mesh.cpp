@@ -241,6 +241,7 @@ bool Mesh::load_mesh(std::string filename)
 			<< filename << "\"!!"
 			<< std::endl;
 		//exit(0);
+		return 0;
 	}
 	std::getline(infile,buffer,'\n');
 	if (buffer.length() == 0 || buffer[0] == '#')

@@ -254,7 +254,9 @@ int cal_convex_hall(Mesh& mesh,Point& center,double& length)
 	
 		for (i = 0; i < mesh.number_of_point(); i++)
 		{
-			Mesh::Point& pt = mesh.find_point(i);
+			Mesh::Point pt;
+		 	pt.x[0] = mesh.find_point(i).x[0];
+			pt.x[1] = mesh.find_point(i).x[1];
 			x_max[j] = x_max[j] >= pt.x[j]? x_max[j] : pt.x[j];
 			x_min[j] = x_min[j] <= pt.x[j]? x_min[j] : pt.x[j];
 		}
@@ -370,9 +372,15 @@ int quadtree_creat_childs(Mesh mesh,Quadtree& qtree,QuadtreeNode* ftnode)
 		// 计算单元中心的坐标
 		eindex = qtree.elemList[i];
 
-		Mesh::Surface_element& se = mesh.find_surface_element(eindex);
-		Mesh::Point& pt1 = mesh.find_point(se.se_conectivity[0]);
-		Mesh::Point& pt2 = mesh.find_point(se.se_conectivity[1]);
+		int pt1_index = mesh.find_surface_element(eindex).se_conectivity[0];
+		int pt2_index = mesh.find_surface_element(eindex).se_conectivity[1];
+		
+		Mesh::Point pt1,pt2;
+		pt1.x[0] = mesh.find_point(pt1_index).x[0];
+		pt1.x[1] = mesh.find_point(pt1_index).x[1];
+
+		pt2.x[0] = mesh.find_point(pt2_index).x[0];
+		pt2.x[1] = mesh.find_point(pt2_index).x[1];
 
 		double x = 0.5*(pt1.x[0] + pt2.x[0]);
 		double y = 0.5*(pt1.x[1] + pt2.x[1]);
@@ -524,7 +532,7 @@ int print_quadtree_info(Quadtree qtree,char filename[])
 	return 1;
 }
 
-int plot_quadtree(Quadtree qtree,char filename[])
+int plot_quadtree(Quadtree qtree,const char* filename)
 {
 	FILE* fp;
 	double coef_x[4]={-0.5,0.5,0.5,-0.5};
