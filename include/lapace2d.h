@@ -10,7 +10,7 @@ class Laplace2d
 {
 public:
 	Laplace2d(){};
-	Laplace2d(std::string filename){bmesh.load_mesh(filename);};
+	Laplace2d(std::string filename){bmesh.load_mesh(filename);bmesh.save(filename + ".nmsh");};
 	~Laplace2d(){};
 
 	typedef struct __bc_type

@@ -20,11 +20,12 @@ public:
 	Mesh(std::string filename){load_mesh(filename);};
 	~Mesh(){};
 	struct Point {
-		Point(){ x[0] = x[1] = x[2] = .0;}
-		Point(const Point& pt){x[0]=pt.x[0];x[1]=pt.x[1];x[2]=pt.x[2];}
+		Point(){ x[0] = x[1] = x[2] = .0;p_tag = 0;}
+		Point(const Point& pt){p_tag = pt.p_tag;x[0]=pt.x[0];x[1]=pt.x[1];x[2]=pt.x[2];}
 		Point operator=(const Point& pt)
 		{ 
 			Point rpt;
+			rpt.p_tag = pt.p_tag;
 			rpt.x[0]=pt.x[0];
 			rpt.x[1]=pt.x[1];
 			rpt.x[2]=pt.x[2];

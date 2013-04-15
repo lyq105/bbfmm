@@ -243,6 +243,11 @@ bool Mesh::load_mesh(std::string filename)
 		//exit(0);
 		return 0;
 	}
+	else
+	{
+		std::cout << " Mesh data is loaded with " 
+			        << filename << "!!"<<std::endl;
+	}
 	std::getline(infile,buffer,'\n');
 	if (buffer.length() == 0 || buffer[0] == '#')
 	{
@@ -254,6 +259,8 @@ bool Mesh::load_mesh(std::string filename)
 		>> len_sur_elem_list
 		>> len_vol_elem_list;
 
+	//std::cout << buffer << std::endl;
+	//std::cout << mesh_dim << "  " << len_sur_elem_list << std::endl;
 	if (mesh_dim == 2)  // for 2d triangle element.
 	{
 		number_of_s_node = 2;
@@ -279,13 +286,21 @@ bool Mesh::load_mesh(std::string filename)
 		buffer_parser.clear();
 		buffer_parser.str(buffer);
 		buffer_parser >> ptemp.p_tag;
+		//std::cout << ptemp.p_tag << std::endl;
+		if(ptemp.p_tag == 1)
+		{
+			//std::cout << "=========" <<ptemp.p_tag << std::endl;
+		}
 		for (int p_id = 0; p_id < mesh_dim; ++ p_id){			
 			buffer_parser >> ptemp.x[p_id];
 		}
 		//		std::cout << ptemp.x[0] << "   " << ptemp.x[1] << std::endl;
 		point_list.push_back(ptemp);
+		if (point_list[i].p_tag != ptemp.p_tag)
+			std::cout << "Ture it is!\n";
 	}
 
+	std::cout << " mesh have "<< point_list.size() << " nodes "<< std::endl;
 	// The next data block is the surface element list; 
 
 	for (int i = 0; i < len_sur_elem_list; i++) 
@@ -300,6 +315,7 @@ bool Mesh::load_mesh(std::string filename)
 		buffer_parser.clear();
 		buffer_parser.str(buffer);
 		buffer_parser >> se.se_mat >>tag;
+		se.se_tag.push_back(tag);	
 		//		std::cout << se.se_tag << "  " << se.se_mat << std::endl;
 		for (int se_id = 0; se_id < number_of_s_node; ++ se_id)
 		{
@@ -328,6 +344,7 @@ bool Mesh::load_mesh(std::string filename)
 		buffer_parser.clear();
 		buffer_parser.str(buffer);
 		buffer_parser >> ve.ve_mat >> tag;
+		ve.ve_tag.push_back(tag);
 		for (int ve_id = 0; ve_id < number_of_v_node; ++ ve_id)
 		{
 			int temp;
@@ -340,6 +357,7 @@ bool Mesh::load_mesh(std::string filename)
 
 	cal_surface_outer_norm(); //
 	infile.close();
+	save(filename + ".bak");
 	return 1;
 }
 
@@ -653,6 +671,7 @@ bool Mesh::save( std::string filename )
 	ofile << this -> number_of_point() << std::endl;
 	for (int i = 0; i < this->number_of_point();i++ )
 	{
+		//ofile << this->point_list[i].p_tag << "  ";
 		for (int j =0; j< this->mesh_dim; ++j)
 		{
 			ofile << this->point_list[i].x[j] << "   ";

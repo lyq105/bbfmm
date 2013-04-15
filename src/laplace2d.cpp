@@ -1,5 +1,5 @@
 #include "lapace2d.h"
-#include "Matrix.h"
+#include "matrix.h"
 #include <iomanip>
 //#include <mkl_lapacke.h>
 // define some variables
@@ -10,25 +10,35 @@ void GAUSSELIMINATE(double **E,int M,double *RHS);
 int Laplace2d::initial_bc()
 {
 	bc.freedom = bmesh.number_of_surface_elements();
+	//std::cout << bc.freedom << std::endl;
  	bc.bctags.resize(bc.freedom);
  	bc.bcvalues.resize(bc.freedom);
 //int test = 0 ;
 	for (int i = 0; i < bc.freedom; i++)
 	{	
-		Mesh::Surface_element& se = bmesh.find_surface_element(i);
-		if(se.se_tag == 1)    // first kind boundary condition
+		const Mesh::Surface_element& se = bmesh.find_surface_element(i);
+		if(se.se_tag[0] == 1)    // first kind boundary condition
 		{
 // 			test++;
 			bc.bctags[i] = 1;
 			bc.bcvalues[i] = 200;
 		}
-		if(se.se_tag == 2) // second kind boundary condition
+		if(se.se_tag[0] == 2) // second kind boundary condition
 		{ 
 // 			test++;
 			bc.bctags[i] = 2;
 			bc.bcvalues[i] = 10;
 		}
 	}
+
+//	for (int i = 0; i< bmesh.number_of_point(); ++i)
+//	{
+//		std::cout 
+//			<< bmesh.find_point(i).p_tag << " " 
+//			<< bmesh.find_point(i).x[0]  << " "
+//			<< bmesh.find_point(i).x[1]  << " "
+//			<< std::endl;
+//	}
 //	std::cout << "test = " << test << std::endl;
 	return 1;
 }
@@ -42,13 +52,13 @@ int Laplace2d::solve()
 	double * rhs;
 
 	const double pi = 3.14159265;
-	//double gaussnum = 4;
-	//double gausspt[4] = { 0.86113631, -0.86113631, 0.33998014, -0.33998014 };
-	//double gausswt[4] = {0.34785485,0.34785485,0.65214515,0.65214515};
+	double gaussnum = 4;
+	double gausspt[4] = { 0.86113631, -0.86113631, 0.33998014, -0.33998014 };
+	double gausswt[4] = {0.34785485,0.34785485,0.65214515,0.65214515};
 
-	double gaussnum = 7;
-	double gausspt[7] = {0, 0.94910791, -0.94910791, 0.74153119, -0.74153119, 0.40584515,-0.40584515 };
-	double gausswt[7] = {0.41795918,0.12948497,0.12948497,0.27970539,0.27970539,0.38183005,0.38183005};
+	//double gaussnum = 7;
+	//double gausspt[7] = {0, 0.94910791, -0.94910791, 0.74153119, -0.74153119, 0.40584515,-0.40584515 };
+	//double gausswt[7] = {0.41795918,0.12948497,0.12948497,0.27970539,0.27970539,0.38183005,0.38183005};
 
 	int freedom = bmesh.number_of_surface_elements();
 
@@ -70,9 +80,9 @@ int Laplace2d::solve()
 
 	for(i = 0; i< freedom; i++) 
 	{
-		Mesh::Surface_element& source_e = bmesh.find_surface_element(i);
-		Mesh::Point& s1 = bmesh.find_point(source_e.se_conectivity[0]);
-		Mesh::Point& s2 = bmesh.find_point(source_e.se_conectivity[1]);
+		const Mesh::Surface_element& source_e = bmesh.find_surface_element(i);
+		const Mesh::Point& s1 = bmesh.find_point(source_e.se_conectivity[0]);
+		const Mesh::Point& s2 = bmesh.find_point(source_e.se_conectivity[1]);
 		// find out the source point
 		double source_x0 = 0.5 * (s1.x[0] + s2.x[0]);
 		double source_x1 = 0.5 * (s1.x[1] + s2.x[1]);
@@ -80,9 +90,9 @@ int Laplace2d::solve()
 		for (j = 0; j < freedom; j++) 
 		{
 			// find out the number of 2 ends of a cell.
-			Mesh::Surface_element& se = bmesh.find_surface_element(j);
-			Mesh::Point& p1 = bmesh.find_point(se.se_conectivity[0]);
-			Mesh::Point& p2 = bmesh.find_point(se.se_conectivity[1]);
+			const Mesh::Surface_element& se = bmesh.find_surface_element(j);
+			const Mesh::Point& p1 = bmesh.find_point(se.se_conectivity[0]);
+			const Mesh::Point& p2 = bmesh.find_point(se.se_conectivity[1]);
 //			std::cout << se.se_conectivity[0]
 
 			// calculate the length of a cell.
@@ -201,9 +211,9 @@ int Laplace2d::solve_lapack()
 
 	for(i = 0; i< freedom; i++) 
 	{
-		Mesh::Surface_element& source_e = bmesh.find_surface_element(i);
-		Mesh::Point& s1 = bmesh.find_point(source_e.se_conectivity[0]);
-		Mesh::Point& s2 = bmesh.find_point(source_e.se_conectivity[1]);
+		const Mesh::Surface_element& source_e = bmesh.find_surface_element(i);
+		const Mesh::Point& s1 = bmesh.find_point(source_e.se_conectivity[0]);
+		const Mesh::Point& s2 = bmesh.find_point(source_e.se_conectivity[1]);
 		// find out the source point
 		double source_x0 = 0.5 * (s1.x[0] + s2.x[0]);
 		double source_x1 = 0.5 * (s1.x[1] + s2.x[1]);
@@ -211,9 +221,9 @@ int Laplace2d::solve_lapack()
 		for (j = 0; j < freedom; j++) 
 		{
 			// find out the number of 2 ends of a cell.
-			Mesh::Surface_element& se = bmesh.find_surface_element(j);
-			Mesh::Point& p1 = bmesh.find_point(se.se_conectivity[0]);
-			Mesh::Point& p2 = bmesh.find_point(se.se_conectivity[1]);
+			const Mesh::Surface_element& se = bmesh.find_surface_element(j);
+			const Mesh::Point& p1 = bmesh.find_point(se.se_conectivity[0]);
+			const Mesh::Point& p2 = bmesh.find_point(se.se_conectivity[1]);
 			//			std::cout << se.se_conectivity[0]
 
 			// calculate the length of a cell.
@@ -323,27 +333,29 @@ int Laplace2d::print_solution(std::string resfname)
 
 	for (int i = 0; i< bmesh.number_of_point(); i++)
 	{
-		Mesh::Point& p0 = bmesh.find_point(i);
-
+		const Mesh::Point& p0 = bmesh.find_point(i);
+		//std::cout << p0.p_tag << std::endl;
 		if(p0.p_tag == 0)   // boundary point
 		{
 			ofile << std::setw(18) << std::setprecision(8)
+				//<< p0.p_tag << " " 
 				  << p0.x[0] << " "
 			      << p0.x[1] << " "
 			      << u_boundary(i)
 				  << std::endl;
 		}
 		else{
-			ofile << std::setw(18) << std::setprecision(8)
+			ofile << std::setw(18) << std::setprecision(10)
 				  << p0.x[0] << " "
 		    	  << p0.x[1] << " "
 			      << u_field(p0.x[0],p0.x[1])
 				  << std::endl;
+
 		}
 	}
 	for (int i = 0; i < bmesh.number_of_volume_elements(); i++) 
 	{
-		Mesh::Volume_element& ve = bmesh.find_volume_element(i);
+		const Mesh::Volume_element& ve = bmesh.find_volume_element(i);
 		ofile << std::setw(12) 
 			  << ve.ve_conectivity[0] + 1 << " "
 			  << ve.ve_conectivity[1] + 1 << " "
@@ -362,7 +374,7 @@ double Laplace2d::u_boundary(int number)
 
 	for(int i = 0; i<freedom;i++)
 	{
-		Mesh::Surface_element& se = bmesh.find_surface_element(i);
+		const Mesh::Surface_element& se = bmesh.find_surface_element(i);
  		if(number == se.se_conectivity[0] || number == se.se_conectivity[1])
 		{
 			k += 1;
@@ -391,9 +403,9 @@ double Laplace2d::u_field(double sx0, double sx1)
  	for (j = 0; j < freedom; j++) 
  	{
 		// find out the number of 2 ends of a cell.
-		Mesh::Surface_element& se = bmesh.find_surface_element(j);
-		Mesh::Point& p1 = bmesh.find_point(se.se_conectivity[0]);
-		Mesh::Point& p2 = bmesh.find_point(se.se_conectivity[1]);
+		const Mesh::Surface_element& se = bmesh.find_surface_element(j);
+		const Mesh::Point& p1 = bmesh.find_point(se.se_conectivity[0]);
+		const Mesh::Point& p2 = bmesh.find_point(se.se_conectivity[1]);
 
 		// calculate the length of a cell.
 		double gama_j = sqrt((p1.x[0] - p2.x[0])*(p1.x[0] - p2.x[0]) 
@@ -437,7 +449,7 @@ double Laplace2d::h0_norm()
 	double h0 = 0;
 	for (int i = 0; i < bmesh.number_of_volume_elements(); ++ i)
 	{
-		Mesh::Volume_element& ve = bmesh.find_volume_element(i);
+		const Mesh::Volume_element& ve = bmesh.find_volume_element(i);
 		for (int g_id = 0; g_id < gauss_num; ++g_id )
 		{
 			h0 += 0.1; // TODO: 

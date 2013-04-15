@@ -1,11 +1,12 @@
 #include "lapace2d.h"
 #include "timer.h"
-
-void constant_bem()
+#include <string>
+void constant_bem(const std::string& fname)
 {
+	std::string tec_fname = fname + ".plt";
 	Timer tm;
 	tm.start();
-	Laplace2d laplace("F:\\LiYiQiang\\Desktop\\Fast Bem\\code\\cbem_new\\bem2d.dat");
+	Laplace2d laplace(fname);
 	tm.stop();
 	tm.diplayelapsedtime();
 	laplace.initial_bc();
@@ -14,12 +15,11 @@ void constant_bem()
 //	laplace.solve_lapack();
 	tm.stop();	
 	tm.diplayelapsedtime();
-	laplace.print_solution("g:\\bem2d.dat.res.plt");
-	return 1;
+	laplace.print_solution( tec_fname );
 }
 
 int main(int argc, const char *argv[])
 {
-	constant_bem();
+	constant_bem(std::string(argv[1]));
 	return 0;
 }
